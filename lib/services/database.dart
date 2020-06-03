@@ -32,13 +32,14 @@ class DatabaseService {
     });
   }
 
-  setNotesData(String title , String content , String type , double amount) async {
+  setNotesData(String title , String content , String type , double amount , DateTime date) async {
     await Firestore.instance.collection('users/${this.uid}/notes').document().
       setData({
         'title' : title,
         'content' : content,
         'type' : type,
         'amount' : amount,
+        'date' : date,
       });
   }
 

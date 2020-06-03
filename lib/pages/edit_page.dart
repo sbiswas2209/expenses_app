@@ -18,13 +18,14 @@ class _EditPageState extends State<EditPage> {
   _EditPageState({this.data , this.user});
   String _type , _title , _content , _oldType;
   double _amount;
-
-  _updateValue(String title , String content , String type , double amount){
+  DateTime _dateTime = DateTime.now();
+  _updateValue(String title , String content , String type , double amount , DateTime date){
     setState(() {
       _title = title;
       _content = content;
       _type = type;
       _amount = amount;
+      _dateTime = date;
     });
   }
 
@@ -59,6 +60,7 @@ class _EditPageState extends State<EditPage> {
                     'content' : _content,
                     'type' : _type,
                     'amount' : _amount,
+                    'date' : _dateTime,
                   }
                 );
                 
@@ -101,7 +103,7 @@ class _EditPageState extends State<EditPage> {
                         color: Colors.white,
                       )
                     ),
-                    onChanged: (value) => _updateValue(value, _content, _type, _amount),
+                    onChanged: (value) => _updateValue(value, _content, _type, _amount , _dateTime),
                   ),
                 ),
               ),
@@ -129,7 +131,7 @@ class _EditPageState extends State<EditPage> {
                         color: Colors.white,
                       )
                     ),
-                    onChanged: (value) => _updateValue(_title, value, _type, _amount),
+                    onChanged: (value) => _updateValue(_title, value, _type, _amount , _dateTime),
                   ),
                 ),
               ),
@@ -156,10 +158,28 @@ class _EditPageState extends State<EditPage> {
                         color: Colors.white,
                       )
                     ),
-                    onChanged: (value) => _updateValue(_title, _content, _type, double.parse(value)),
+                    onChanged: (value) => _updateValue(_title, _content, _type, double.parse(value) , _dateTime),
                   ),
                 ),
               ),
+              Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Card(
+                      child: RaisedButton.icon(
+                        onPressed: () {
+                          showDatePicker(
+                            context: context,
+                            initialDate: _dateTime == null ? DateTime.now() : _dateTime,
+                            firstDate: DateTime(1900),
+                            lastDate: DateTime(2100),
+                          ).then((date) => _updateValue(_title, _content, _type, _amount, date),)
+                          ;
+                        },
+                        label: Text(_dateTime == null ? DateTime.now().toString() : _dateTime.toString()),
+                        icon: Icon(Icons.calendar_today),
+                      ),
+                    ),
+                  ),
                Padding(
                     padding: const EdgeInsets.all(5.0),
                     child: DropdownButton(
@@ -196,11 +216,7 @@ class _EditPageState extends State<EditPage> {
                           child: Text(value),
                         );
                       }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _type = value;
-                        });
-                      },
+                      onChanged: (value) => _updateValue(_title, _content, value, _amount, _dateTime)
                     ),
                   ),
             ],

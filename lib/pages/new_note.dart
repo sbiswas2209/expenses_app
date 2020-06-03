@@ -15,12 +15,14 @@ class _NewItemPageState extends State<NewItemPage> {
   final _formKey = GlobalKey<FormState>();
 String _title = null , _content = null , _type = 'Miscellaneous';
 double _amount = -9999.9999;
-_updateValue(String a , String b , double c , String d){
+DateTime _dateTime = new DateTime.now();
+_updateValue(String a , String b , double c , String d , DateTime date){
   setState(() {
     _title = a;
     _content = b;
     _type = d;
     _amount = c;
+    _dateTime = date;
   });
 }
 Future<void> _showNullFieldDialog(BuildContext context) async {
@@ -87,7 +89,7 @@ Future<void> _showNullFieldDialog(BuildContext context) async {
                           fontSize: 15.0,
                         ),
                       ),
-                      onChanged: (value) => _updateValue(value, _content, _amount, _type),
+                      onChanged: (value) => _updateValue(value, _content, _amount, _type , _dateTime),
                     ),
                   ),
                   Padding(
@@ -106,7 +108,7 @@ Future<void> _showNullFieldDialog(BuildContext context) async {
                         fillColor: Color(0XFF4d4646),
                         border: OutlineInputBorder(),
                       ),
-                      onChanged: (value) => _updateValue(_title, value, _amount, _type),
+                      onChanged: (value) => _updateValue(_title, value, _amount, _type , _dateTime),
                     ),
                   ),
                   Padding(
@@ -124,7 +126,7 @@ Future<void> _showNullFieldDialog(BuildContext context) async {
                           fontSize: 15.0,
                         ),
                       ),
-                      onChanged: (value) => _updateValue(_title, _content, double.parse(value), _type),
+                      onChanged: (value) => _updateValue(_title, _content, double.parse(value), _type , _dateTime),
                     ),
                   ),
                   Padding(
@@ -163,28 +165,61 @@ Future<void> _showNullFieldDialog(BuildContext context) async {
                           child: Text(value),
                         );
                       }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _type = value;
-                        });
-                      },
+                      onChanged: (value) => _updateValue(_title, _content, _amount, value, _dateTime),
                     ),
                   ),
-                  Card(
-                    margin: EdgeInsets.fromLTRB(100, 0, 100, 0),
-                    child: RaisedButton.icon(
-                      label: Text('Add'),
-                      icon: Icon(Icons.add),
-                      onPressed: (){
-                        if(_title == null || _content == null || _type == null || _amount == -9999.9999){
-                          _showNullFieldDialog(context);
-                        }
-                        else{
-                          database.setNotesData(_title, _content, _type, _amount);
-                          database.changeTotal(_amount , _type);
-                          Navigator.pop(context);
-                        }
-                      },
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Card(
+                      color: Color(0XFF5b5656),
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text(_dateTime == null ? DateTime.now().toString() : _dateTime.toString(),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Card(
+                      margin: EdgeInsets.fromLTRB(100, 0, 100, 0),
+                      child: RaisedButton.icon(
+                        onPressed: () {
+                          showDatePicker(
+                            context: context,
+                            initialDate: _dateTime == null ? DateTime.now() : _dateTime,
+                            firstDate: DateTime(1900),
+                            lastDate: DateTime(2100),
+                          ).then((date) => _updateValue(_title, _content, _amount, _type, date),)
+                          ;
+                        },
+                        label: Text('Choose Date'),
+                        icon: Icon(Icons.calendar_today),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Card(
+                      margin: EdgeInsets.fromLTRB(100, 0, 100, 0),
+                      child: RaisedButton.icon(
+                        label: Text('Add'),
+                        icon: Icon(Icons.add),
+                        onPressed: (){
+                          if(_title == null || _content == null || _type == null || _amount == -9999.9999){
+                            _showNullFieldDialog(context);
+                          }
+                          else{
+                            database.setNotesData(_title, _content, _type, _amount , _dateTime);
+                            database.changeTotal(_amount , _type);
+                            Navigator.pop(context);
+                          }
+                        },
+                      ),
                     ),
                   )
                 ],
