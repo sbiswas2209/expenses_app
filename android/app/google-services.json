@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "699644479070",
+    "firebase_url": "https://pollapp-25a90.firebaseio.com",
+    "project_id": "pollapp-25a90",
+    "storage_bucket": "pollapp-25a90.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:699644479070:android:f1b5b839eedc546db5d6cf",
+        "android_client_info": {
+          "package_name": "com.example.expenses_calculator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "699644479070-e7kgr8nm1ojq1re9mibo0vosid0sipmb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBl8qiVCLyWvBtoG7hB_8wP0y8uUoZ-hBI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "699644479070-e7kgr8nm1ojq1re9mibo0vosid0sipmb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
