@@ -41,7 +41,7 @@ void _updateIndex(int newIndex){
           style: TextStyle(
             color: Color(0XFFf5eaea),
             fontSize: 20.0,
-            fontWeight: FontWeight.bold,
+            //fontWeight: FontWeight.bold,
           ),
         ),
         actions: <Widget>[
@@ -49,13 +49,13 @@ void _updateIndex(int newIndex){
             onPressed: () => Navigator.push(context , new MaterialPageRoute(
               builder: (BuildContext context) => new AccountPage(user: user)
             )), 
-            child: Icon(Icons.person),
+            child: Icon(Icons.person , color: Colors.white,),
           ),
           FlatButton(
             onPressed: () async {
               await _firebaseAuth.signOut();
             },
-             child: Icon(Icons.exit_to_app),
+             child: Icon(Icons.exit_to_app , color: Colors.white,),
              ),
         ],
       ),

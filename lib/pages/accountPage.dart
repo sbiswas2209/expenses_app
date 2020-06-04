@@ -18,6 +18,19 @@ class AccountPage extends StatelessWidget {
             color: Color(0XFFfffffc),
           ),
         ),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () {
+              showAboutDialog(
+                context: context,
+                applicationName: 'Expenses App',
+                applicationIcon: FlutterLogo(),
+                applicationVersion: 'v0.0.1',
+              );
+            }, 
+            child: Icon(Icons.info_outline, color: Colors.white,), 
+          ),
+        ],
       ),
       body: StreamBuilder(
       stream: Firestore.instance.document('users/${this.user.uid}').snapshots(),
