@@ -7,7 +7,19 @@ class AccountPage extends StatelessWidget {
   AccountPage({this.user});
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Color(0XFF5b5656),
+        title: Text('Account Page',
+          style: TextStyle(
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold,
+            color: Color(0XFFfffffc),
+          ),
+        ),
+      ),
+      body: StreamBuilder(
       stream: Firestore.instance.document('users/${this.user.uid}').snapshots(),
       builder: (context , snapshot) {
         return !snapshot.hasData ? LinearProgressIndicator():
@@ -58,6 +70,7 @@ class AccountPage extends StatelessWidget {
             ),
       );
       },
+    ),
     );
   }
 }

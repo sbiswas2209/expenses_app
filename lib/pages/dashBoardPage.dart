@@ -14,6 +14,7 @@ class DashBoardPage extends StatefulWidget {
 
 class _DashBoardPageState extends State<DashBoardPage> {
   String type='Miscellaneous';
+  String month = 'January';
   final User user;
   _DashBoardPageState({this.user});
   @override
@@ -472,6 +473,72 @@ class _DashBoardPageState extends State<DashBoardPage> {
                   ],
                 ),
               ),
+              Card(
+              color: Color(0XFF5b5656),
+              child: Column(
+                children: <Widget>[
+                  Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(Icons.filter_list),
+                    SizedBox(width:10),
+                    Text('Filter by month',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20.0,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: DropdownButton(
+                  dropdownColor: Color(0XFF5b5656),
+                  value: month,
+                  icon: Icon(Icons.calendar_today , color: Colors.white),
+                  iconSize: 20.0,
+                  elevation: 20,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 15.0,
+                  ),
+                  underline: Container(
+                    height: 5,
+                    color: Colors.white,
+                  ),
+                  items: <String>['January',
+                                  'February',
+                                  'March',
+                                  'April',
+                                  'May',
+                                  'June',
+                                  'July',
+                                  'August',
+                                  'September',
+                                  'October',
+                                  'November',
+                                  'December',
+                  ].map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      month = value;
+                    });
+                  },
+                    ),
+                ),
+                ],
+              ),
+            ),
           ],
         );
       },

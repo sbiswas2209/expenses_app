@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expenses_calculator/model/user.dart';
 import 'package:expenses_calculator/pages/edit_page.dart';
 import 'package:flutter/material.dart';
+import 'package:time_formatter/time_formatter.dart';
 class FullPage extends StatelessWidget {
   final DocumentSnapshot data;
   final User user;
@@ -75,6 +76,21 @@ class FullPage extends StatelessWidget {
                 ),
                 SizedBox(height:20),
                 Text('${data['amount']}',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20.0,
+                  ),
+                ),
+                SizedBox(height: 20.0),
+                Text('Date',
+                  style: TextStyle(
+                    color: Color(0XFF5b5656),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.0,
+                  ),
+                ),
+                SizedBox(height: 20.0),
+                Text( data['date'] == null ? 'No date to show' : '${new DateTime.fromMillisecondsSinceEpoch(data['date'].seconds*1000)}',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20.0,

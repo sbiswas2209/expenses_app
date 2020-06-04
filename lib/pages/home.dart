@@ -1,5 +1,5 @@
 import 'package:expenses_calculator/model/user.dart';
-import 'package:expenses_calculator/pages/accountpage.dart';
+import 'package:expenses_calculator/pages/accountPage.dart';
 import 'package:expenses_calculator/pages/dashBoardPage.dart';
 import 'package:expenses_calculator/pages/homePage.dart';
 import 'package:expenses_calculator/pages/new_note.dart';
@@ -31,21 +31,26 @@ void _updateIndex(int newIndex){
   Widget build(BuildContext context) {
     List<Widget> _bodyList = <Widget>[
    HomePage(user: user),
-   AccountPage(user: user),
    DashBoardPage(user: user),
  ];
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Color(0XFF5b5656),
-        title: Text('Expenses Calculator',
+        title: Text('Expenses',
           style: TextStyle(
             color: Color(0XFFf5eaea),
-            fontSize: 25.0,
+            fontSize: 20.0,
             fontWeight: FontWeight.bold,
           ),
         ),
         actions: <Widget>[
+          FlatButton(
+            onPressed: () => Navigator.push(context , new MaterialPageRoute(
+              builder: (BuildContext context) => new AccountPage(user: user)
+            )), 
+            child: Icon(Icons.person),
+          ),
           FlatButton(
             onPressed: () async {
               await _firebaseAuth.signOut();
@@ -55,6 +60,7 @@ void _updateIndex(int newIndex){
         ],
       ),
       body: _bodyList[_index],
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add , color: Color(0XFF4d4646)),
         backgroundColor: Color(0XFF7fcd91),
@@ -64,7 +70,6 @@ void _updateIndex(int newIndex){
           ));
         },
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Color(0XFF4d4646),
         
@@ -76,14 +81,6 @@ void _updateIndex(int newIndex){
           BottomNavigationBarItem(
             icon: Icon(Icons.home , color: Color(0XFFf5eaea),),
             title: Text('Home',
-              style: TextStyle(
-                color: Color(0XFFf5eaea),
-              ),
-            ),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person , color: Color(0XFFf5eaea),),
-            title: Text('Account',
               style: TextStyle(
                 color: Color(0XFFf5eaea),
               ),
