@@ -690,10 +690,10 @@ class _DashBoardPageState extends State<DashBoardPage> {
                           }
                           else{
                             double total = await new DatabaseService(uid: user.uid).filterMonths(start, end);
-                            //double total_category = await new DatabaseService(uid: user.uid).filterCategoryMonths(start, end, type);
+                            double total_category = await new DatabaseService(uid: user.uid).filterCategoryMonths(start, end, type);
                             setState(() {
                               total_month_filter = total;
-                              //total_category_month_filter = total_category;
+                              total_category_month_filter = total_category;
                             });
                           }
                         },
@@ -714,20 +714,20 @@ class _DashBoardPageState extends State<DashBoardPage> {
                       ),
                     ),
                   ),
-                  // Text('Total $type Expenditures within this period :',
-                  //   style: TextStyle(
-                  //     color: Colors.white,
-                  //   ),
-                  // ),
-                  // Padding(
-                  //   padding: const EdgeInsets.all(8.0),
-                  //   child: Text(snapshot.data[type] == 0.0 ? 'No Expenses to show.' : total_category_month_filter == null ? 'Loading' : '$total_category_month_filter',
-                  //     style: TextStyle(
-                  //       color: Color(0XFF7fcd91),
-                  //       fontSize: 20.0,
-                  //     ),
-                  //   ),
-                  // ),
+                  Text('Total $type Expenditures within this period :',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(snapshot.data[type] == 0.0 ? 'No Expenses to show.' : total_category_month_filter == null ? 'Loading' : '$total_category_month_filter',
+                      style: TextStyle(
+                        color: Color(0XFF7fcd91),
+                        fontSize: 20.0,
+                      ),
+                    ),
+                  ),
                   SizedBox(height:50),
                 ],
               ),
