@@ -72,15 +72,6 @@ class DatabaseService {
       '$newType' : FieldValue.increment(newAmount),
     });
   }
-   _calculateSum(var amounts){
-    int i = 0;
-    double total = 0.0;
-    for(i=0;i<amounts.length;i++){
-      total += amounts[i];
-    }
-    print(total);
-    return total;
-  }
 
   calculateTotal(){
     double total;
@@ -88,6 +79,44 @@ class DatabaseService {
     print(total);
     return total;
   }
+
+  Future<double> filterMonths(DateTime start , DateTime end) async {
+    double total = 0.0;
+    List data = [0.0];
+    await Firestore.instance.collection('users/${this.uid}/notes')
+    .where('date', isLessThan: end)
+    .where('date', isGreaterThan:start)
+    .getDocuments().then(
+      (snapshot) => snapshot.documents.forEach((element) => data.add(element.data['amount'])));
+      int i=0;
+      for(i=0;i<data.length;i++){
+        total += data[i];
+      }
+      return total;
+  }
+
+  // Future<double> filterCategoryMonths(DateTime start , DateTime end , String type) async {
+  //   double total = 0.0;
+  //   List data = [0.0];
+  //   try{
+  //     await Firestore.instance.collection('users')
+  //     .document('${this.uid}')
+  //     .collection('notes')
+  //   .where('date', isLessThan: end)
+  //   .where('date', isGreaterThan: start)
+  //   .where('type', isEqualTo: '$type')
+  //   .getDocuments().then(
+  //     (snapshot) => snapshot.documents.forEach((element) => data.add(element.data['amount'])));
+  //     int i=0;
+  //     for(i=0;i<data.length;i++){
+  //       total += data[i];
+  //     }
+  //   }
+  //   catch(e){
+  //     return 0.0;
+  //   }
+  //     return total;
+  // }
 
   List<Notes> _notesListFromSnapshot(QuerySnapshot snapshot){
     return snapshot.documents.map((doc) {
