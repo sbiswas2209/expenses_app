@@ -95,28 +95,28 @@ class DatabaseService {
       return total;
   }
 
-  // Future<double> filterCategoryMonths(DateTime start , DateTime end , String type) async {
-  //   double total = 0.0;
-  //   List data = [0.0];
-  //   try{
-  //     await Firestore.instance.collection('users')
-  //     .document('${this.uid}')
-  //     .collection('notes')
-  //   .where('date', isLessThan: end)
-  //   .where('date', isGreaterThan: start)
-  //   .where('type', isEqualTo: '$type')
-  //   .getDocuments().then(
-  //     (snapshot) => snapshot.documents.forEach((element) => data.add(element.data['amount'])));
-  //     int i=0;
-  //     for(i=0;i<data.length;i++){
-  //       total += data[i];
-  //     }
-  //   }
-  //   catch(e){
-  //     return 0.0;
-  //   }
-  //     return total;
-  // }
+  Future<double> filterCategoryMonths(DateTime start , DateTime end , String type) async {
+    double total = 0.0;
+    List data = [0.0];
+    try{
+      await Firestore.instance.collection('users')
+      .document('${this.uid}')
+      .collection('notes')
+    .where('date', isLessThan: end)
+    .where('date', isGreaterThan: start)
+    .where('type', isEqualTo: '$type')
+    .getDocuments().then(
+      (snapshot) => snapshot.documents.forEach((element) => data.add(element.data['amount'])));
+      int i=0;
+      for(i=0;i<data.length;i++){
+        total += data[i];
+      }
+    }
+    catch(e){
+      return 0.0;
+    }
+      return total;
+  }
 
   List<Notes> _notesListFromSnapshot(QuerySnapshot snapshot){
     return snapshot.documents.map((doc) {
