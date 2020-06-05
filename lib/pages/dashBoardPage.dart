@@ -13,6 +13,7 @@ class DashBoardPage extends StatefulWidget {
 }
 
 class _DashBoardPageState extends State<DashBoardPage> {
+  bool _loadingState = false;
   String type='Miscellaneous';
   double total_month_filter = 0.0;
   double total_category_month_filter = 0.0;
@@ -689,9 +690,13 @@ class _DashBoardPageState extends State<DashBoardPage> {
                             _showDateErrorDialog(context);
                           }
                           else{
+                            setState(() {
+                              _loadingState = true;
+                            });
                             double total = await new DatabaseService(uid: user.uid).filterMonths(start, end);
                             double total_category = await new DatabaseService(uid: user.uid).filterCategoryMonths(start, end, type);
                             setState(() {
+                              _loadingState = false;
                               total_month_filter = total;
                               total_category_month_filter = total_category;
                             });
@@ -707,10 +712,11 @@ class _DashBoardPageState extends State<DashBoardPage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(total_month_filter == null ? 'Loading' : '$total_month_filter',
-                      style: TextStyle(
-                        color: Color(0XFF7fcd91),
-                        fontSize: 20.0,
+                    child: _loadingState ? Center(child: CircularProgressIndicator(),):
+                              Text(total_month_filter == null ? 'Loading' : '$total_month_filter',
+                                  style: TextStyle(
+                                      color: Color(0XFF7fcd91),
+                                      fontSize: 20.0,
                       ),
                     ),
                   ),
@@ -721,7 +727,8 @@ class _DashBoardPageState extends State<DashBoardPage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(snapshot.data[type] == 0.0 ? 'No Expenses to show.' : total_category_month_filter == null ? 'Loading' : '$total_category_month_filter',
+                    child: _loadingState ? Center(child: CircularProgressIndicator())
+                        :Text(snapshot.data[type] == 0.0 ? 'No Expenses to show.' : total_category_month_filter == null ? 'Loading' : '$total_category_month_filter',
                       style: TextStyle(
                         color: Color(0XFF7fcd91),
                         fontSize: 20.0,
