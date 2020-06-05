@@ -59,7 +59,10 @@ Future<void> _showNullFieldDialog(BuildContext context) async {
       backgroundColor: Colors.black,
       appBar: AppBar(
         actions: <Widget>[
-          FlatButton.icon(onPressed: (){}, icon: Icon(Icons.camera_alt), label: Text('Scan Bill'))
+          FlatButton.icon(onPressed: () {}, 
+          icon: Icon(Icons.camera_alt), 
+          label: Text('Scan Bill')
+          )
         ],
         backgroundColor: Color(0XFF7fcd91),
         title: Text('New Note',
