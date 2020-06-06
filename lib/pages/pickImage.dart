@@ -17,16 +17,20 @@ class _PickImageState extends State<PickImage> {
     var tempStore = await _picker.getImage(source: ImageSource.gallery);
     setState(() {
       pickedImage = tempStore;
+      if(pickedImage != null){
       image = File(pickedImage.path);
       imageLoaded = true;
+      }
     });
   }
   Future pickCameraImage() async {
     var tempStore = await _picker.getImage(source: ImageSource.camera);
     setState(() {
-      imageLoaded = true;
       pickedImage = tempStore;
+      if(pickedImage != null){
       image = File(pickedImage.path);
+      imageLoaded = true;
+      }
     });
   }
 
