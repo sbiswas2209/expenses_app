@@ -1,6 +1,7 @@
 import 'package:expenses_calculator/model/user.dart';
 import 'package:expenses_calculator/pages/accountPage.dart';
 import 'package:expenses_calculator/pages/dashBoardPage.dart';
+import 'package:expenses_calculator/pages/dashWrapper.dart';
 import 'package:expenses_calculator/pages/homePage.dart';
 import 'package:expenses_calculator/pages/new_note.dart';
 import 'package:expenses_calculator/services/auth.dart';

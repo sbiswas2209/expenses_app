@@ -13,8 +13,28 @@ class DashBoardPage extends StatefulWidget {
 }
 
 class _DashBoardPageState extends State<DashBoardPage> {
-  bool _loadingState = false;
+  bool loading = true;
+  bool _loadingState = true;
   String type='Miscellaneous';
+  double total = 0.0;
+  int index = 0;
+  List categories = ['Food',
+                                    'Stationery',
+                                    'Office',
+                                    'Conveyance',
+                                    'Entertainment',
+                                    'Shopping',
+                                    'Household',
+                                    'Telephone',
+                                    'Rent',
+                                    'Transport',
+                                    'Personal',
+                                    'Beauty',
+                                    'Educational',
+                                    'Miscellaneous'
+                    ];
+  double category_data=0.0;
+  String filter_type = 'Miscellaneous';
   double total_month_filter = 0.0;
   double total_category_month_filter = 0.0;
   String month = 'January';
@@ -22,6 +42,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
   DateTime end = DateTime.now();
   final User user;
   _DashBoardPageState({this.user});
+  
   Future<void> _showDateErrorDialog(BuildContext context) async {
   return showDialog<void>(
     context: context,
@@ -48,12 +69,43 @@ class _DashBoardPageState extends State<DashBoardPage> {
     },
   );
 }
+_calculateTotal() async {
+  DatabaseService data = new DatabaseService(uid:user.uid);
+  double total = await data.calculateTotal();
+  return total;
+}
+_calculateCategoryTotal(String type) async {
+    DatabaseService data = new DatabaseService(uid: user.uid);
+    double total;
+    total = await data.calculateCategoryTotal(type);
+    return total;
+}
+@override
+void initState(){
+  super.initState();
+  setState(() {
+    _loadingState = true;
+  });
+  _calculateCategoryTotal('Miscellaneous').then((value){
+    print(value);
+    setState(() {
+      category_data = value;
+      loading  = false;
+    });
+  });
+  print(category_data);
+  _calculateTotal().then((value){
+    setState(() {
+      total = value;
+    });
+  });
+  setState(() {
+    _loadingState = false;
+  });
+}
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: Firestore.instance.document('users/${user.uid}').snapshots(),
-      builder: (context , snapshot){
-        return !snapshot.hasData ? LinearProgressIndicator() :
+    return _loadingState == true ? LinearProgressIndicator() :
         ListView(
           children: <Widget>[
             Card(
@@ -63,18 +115,23 @@ class _DashBoardPageState extends State<DashBoardPage> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Center(
-                      child: Text('Total Expenditure',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20.0,
-                        ),
+                      child: Row(
+                        children: <Widget>[
+                          Text('Total Expenditure',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20.0,
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                        ],
                       ),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Center(
-                      child: Text('${snapshot.data['total']}',
+                      child: Text('$total',
                         style: TextStyle(
                           color: Color(0XFF7fcd91),
                           fontSize: 18.0,
@@ -143,6 +200,13 @@ class _DashBoardPageState extends State<DashBoardPage> {
                     onChanged: (value) {
                       setState(() {
                         type = value;
+                        loading = true;
+                      });
+                      _calculateCategoryTotal(value).then((value){
+                        setState(() {
+                          category_data = value;
+                          loading = false;
+                        });
                       });
                     },
                   ),
@@ -158,7 +222,8 @@ class _DashBoardPageState extends State<DashBoardPage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text('${snapshot.data['$type']}',
+                  child: loading ? Center(child: CircularProgressIndicator(strokeWidth: 1.0,),)
+                  : Text('$category_data',
                     style: TextStyle(
                       color: Color(0XFF7fcd91),
                       fontSize: 18.0,
@@ -167,342 +232,6 @@ class _DashBoardPageState extends State<DashBoardPage> {
                 ),
               ],
             ),
-              ),
-              Card(
-                color: Color(0XFF5b5656),
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Center(
-                        child: Text('Table',
-                          style: TextStyle(
-                            color: Colors.white,
-                          fontSize: 20.0,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Center(
-                    child: Table(
-                      border: TableBorder.all(),
-                      children: [
-                        TableRow(
-                          children: <Widget>[
-                            Center(child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('Transport',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            )),
-                            Center(child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('${snapshot.data['Transport']}',
-                                style: TextStyle(
-                                  color: Color(0XFF7fcd91),
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            )),
-                          ],
-                        ),
-                        TableRow(
-                          children: <Widget>[
-                            Center(child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('Telephone',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            )),
-                            Center(child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('${snapshot.data['Telephone']}',
-                                style: TextStyle(
-                                  color: Color(0XFF7fcd91),
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            )),
-                          ],
-                        ),
-                        TableRow(
-                          children: <Widget>[
-                            Center(child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('Stationery',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            )),
-                            Center(child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('${snapshot.data['Stationery']}',
-                                style: TextStyle(
-                                  color: Color(0XFF7fcd91),
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            )),
-                          ],
-                        ),
-                        TableRow(
-                          children: <Widget>[
-                            Center(child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('Shopping',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            )),
-                            Center(child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('${snapshot.data['Shopping']}',
-                                style: TextStyle(
-                                  color: Color(0XFF7fcd91),
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            )),
-                          ],
-                        ),
-                        TableRow(
-                          children: <Widget>[
-                            Center(child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('Rent',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            )),
-                            Center(child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('${snapshot.data['Rent']}',
-                                style: TextStyle(
-                                  color: Color(0XFF7fcd91),
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            )),
-                          ],
-                        ),
-                        TableRow(
-                          children: <Widget>[
-                            Center(child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('Personal',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            )),
-                            Center(child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('${snapshot.data['Personal']}',
-                                style: TextStyle(
-                                  color: Color(0XFF7fcd91),
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            )),
-                          ],
-                        ),
-                        TableRow(
-                          children: <Widget>[
-                            Center(child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('Office',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            )),
-                            Center(child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('${snapshot.data['Office']}',
-                                style: TextStyle(
-                                  color: Color(0XFF7fcd91),
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            )),
-                          ],
-                        ),
-                        TableRow(
-                          children: <Widget>[
-                            Center(child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('Miscellaneous',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            )),
-                            Center(child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('${snapshot.data['Miscellaneous']}',
-                                style: TextStyle(
-                                  color: Color(0XFF7fcd91),
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            )),
-                          ],
-                        ),
-                        TableRow(
-                          children: <Widget>[
-                            Center(child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('Household',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            )),
-                            Center(child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('${snapshot.data['Household']}',
-                                style: TextStyle(
-                                  color: Color(0XFF7fcd91),
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            )),
-                          ],
-                        ),
-                        TableRow(
-                          children: <Widget>[
-                            Center(child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('Food',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            )),
-                            Center(child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('${snapshot.data['Food']}',
-                                style: TextStyle(
-                                  color: Color(0XFF7fcd91),
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            )),
-                          ],
-                        ),
-                        TableRow(
-                          children: <Widget>[
-                            Center(child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('Entertainment',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            )),
-                            Center(child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('${snapshot.data['Entertainment']}',
-                                style: TextStyle(
-                                  color: Color(0XFF7fcd91),
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            )),
-                          ],
-                        ),
-                        TableRow(
-                          children: <Widget>[
-                            Center(child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('Educational',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            )),
-                            Center(child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('${snapshot.data['Educational']}',
-                                style: TextStyle(
-                                  color: Color(0XFF7fcd91),
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            )),
-                          ],
-                        ),
-                        TableRow(
-                          children: <Widget>[
-                            Center(child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('Conveyance',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            )),
-                            Center(child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('${snapshot.data['Conveyance']}',
-                                style: TextStyle(
-                                  color: Color(0XFF7fcd91),
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            )),
-                          ],
-                        ),
-                        TableRow(
-                          children: <Widget>[
-                            Center(child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('Beauty',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            )),
-                            Center(child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('${snapshot.data['Beauty']}',
-                                style: TextStyle(
-                                  color: Color(0XFF7fcd91),
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            )),
-                          ],
-                        ),
-                        ],
-                    ),
-                  ),
-                ),
-                  ],
-                ),
               ),
               Card(
               color: Color(0XFF5b5656),
@@ -641,7 +370,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                   padding: const EdgeInsets.all(5.0),
                   child: DropdownButton(
                     dropdownColor: Color(0XFF5b5656),
-                    value: type,
+                    value: filter_type,
                     icon: Icon(Icons.arrow_downward , color: Colors.white),
                     iconSize: 20.0,
                     elevation: 20,
@@ -675,7 +404,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                     }).toList(),
                     onChanged: (value) {
                       setState(() {
-                        type = value;
+                        filter_type = value;
                       });
                     },
                   ),
@@ -691,12 +420,12 @@ class _DashBoardPageState extends State<DashBoardPage> {
                           }
                           else{
                             setState(() {
-                              _loadingState = true;
+                              loading = true;
                             });
                             double total = await new DatabaseService(uid: user.uid).filterMonths(start, end);
                             double total_category = await new DatabaseService(uid: user.uid).filterCategoryMonths(start, end, type);
                             setState(() {
-                              _loadingState = false;
+                              loading = false;
                               total_month_filter = total;
                               total_category_month_filter = total_category;
                             });
@@ -712,8 +441,8 @@ class _DashBoardPageState extends State<DashBoardPage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: _loadingState ? Center(child: CircularProgressIndicator(),):
-                              Text(total_month_filter == null ? 'Loading' : '$total_month_filter',
+                    child: loading ? Center(child: CircularProgressIndicator(strokeWidth: 1.0,),):
+                              Text(total_month_filter == 0.0 ? 'Nothing to show.' : '$total_month_filter',
                                   style: TextStyle(
                                       color: Color(0XFF7fcd91),
                                       fontSize: 20.0,
@@ -727,8 +456,8 @@ class _DashBoardPageState extends State<DashBoardPage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: _loadingState ? Center(child: CircularProgressIndicator())
-                        :Text(snapshot.data[type] == 0.0 ? 'No Expenses to show.' : total_category_month_filter == null ? 'Loading' : '$total_category_month_filter',
+                    child: loading ? Center(child: CircularProgressIndicator(strokeWidth: 1.0,))
+                        :Text(total_category_month_filter == 0.0 ? 'Nothing to show.' : '$total_category_month_filter',
                       style: TextStyle(
                         color: Color(0XFF7fcd91),
                         fontSize: 20.0,
@@ -741,7 +470,5 @@ class _DashBoardPageState extends State<DashBoardPage> {
             ),
           ],
         );
-      },
-    );
   }
 }
