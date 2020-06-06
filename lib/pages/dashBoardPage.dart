@@ -115,16 +115,13 @@ void initState(){
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Center(
-                      child: Row(
-                        children: <Widget>[
-                          Text('Total Expenditure',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20.0,
-                            ),
+                      child: Center(
+                        child: Text('Total Expenditure',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20.0,
                           ),
-                          SizedBox(width: 10),
-                        ],
+                        ),
                       ),
                     ),
                   ),
@@ -423,7 +420,7 @@ void initState(){
                               loading = true;
                             });
                             double total = await new DatabaseService(uid: user.uid).filterMonths(start, end);
-                            double total_category = await new DatabaseService(uid: user.uid).filterCategoryMonths(start, end, type);
+                            double total_category = await new DatabaseService(uid: user.uid).filterCategoryMonths(start, end, filter_type);
                             setState(() {
                               loading = false;
                               total_month_filter = total;
@@ -449,7 +446,7 @@ void initState(){
                       ),
                     ),
                   ),
-                  Text('Total $type Expenditures within this period :',
+                  Text('Total $filter_type Expenditures within this period :',
                     style: TextStyle(
                       color: Colors.white,
                     ),

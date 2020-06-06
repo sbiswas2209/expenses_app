@@ -51,7 +51,6 @@ class _EditPageState extends State<EditPage> {
         actions: <Widget>[
           FlatButton.icon(
             onPressed: () {
-              database.increaseTotal(data['amount'],_amount , _oldType , _type);
               Firestore.instance.runTransaction((transaction) async {
                 DocumentSnapshot freshSnap = await transaction.get(data.reference);
                 await transaction.update(freshSnap.reference, 
