@@ -13,22 +13,6 @@ class DatabaseService {
     return await userInstance.document(uid).setData({
       'email' : email,
       'password' : password,
-      'total' : 0.0,
-      'Food' : 0.0,
-      'Stationery' : 0.0,
-      'Office' : 0.0,
-      'Conveyance' : 0.0,
-      'Entertainment' : 0.0,
-      'Shopping' : 0.0,
-      'Household' : 0.0,
-      'Telephone' : 0.0,
-      'Rent' : 0.0,
-      'Transport' : 0.0,
-      'Personal' : 0.0,
-      'Beauty' : 0.0,
-      'Educational' : 0.0,
-      'Miscellaneous' : 0.0,
-
     });
   }
 
@@ -42,36 +26,7 @@ class DatabaseService {
         'date' : date,
       });
   }
-
-  increaseTotal(double oldAmount , double newAmount , String oldType , String newType) async {
-    await Firestore.instance.collection('users').
-    document('${this.uid}').
-    updateData({
-      'total' : FieldValue.increment(newAmount - oldAmount),
-      '$oldType' : FieldValue.increment(-oldAmount),
-      '$newType' : FieldValue.increment(newAmount),
-
-    });
-  }
-
-  changeTotal(double amount , String type) async {
-    await Firestore.instance.collection('users')
-    .document('${this.uid}')
-    .updateData({
-      'total' : FieldValue.increment(amount),
-      '$type' : FieldValue.increment(amount),
-    });
-  }
-
-  decreaseTotal(double oldAmount , double newAmount , String oldType , String newType) async {
-    await Firestore.instance.collection('users').
-    document('${this.uid}').
-    updateData({
-      'total' : FieldValue.increment(newAmount - oldAmount),
-      '$oldType' : FieldValue.increment(-oldAmount),
-      '$newType' : FieldValue.increment(newAmount),
-    });
-  }
+  
 
   Future<double> calculateTotal() async {
     double total = 0.0;

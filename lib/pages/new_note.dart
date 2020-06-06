@@ -1,3 +1,4 @@
+import 'package:expenses_calculator/pages/pickImage.dart';
 import 'package:expenses_calculator/services/database.dart';
 import 'package:flutter/material.dart';
 class NewItemPage extends StatefulWidget {
@@ -59,9 +60,13 @@ Future<void> _showNullFieldDialog(BuildContext context) async {
       backgroundColor: Colors.black,
       appBar: AppBar(
         actions: <Widget>[
-          FlatButton.icon(onPressed: () {}, 
+          FlatButton.icon(onPressed: () {
+            Navigator.push(context, new MaterialPageRoute(
+              builder: (BuildContext context) => new PickImage()
+            ));
+          }, 
           icon: Icon(Icons.camera_alt), 
-          label: Text('Scan Bill')
+          label: Text('Scan Bill'),
           )
         ],
         backgroundColor: Color(0XFF7fcd91),
@@ -218,7 +223,6 @@ Future<void> _showNullFieldDialog(BuildContext context) async {
                           }
                           else{
                             database.setNotesData(_title, _content, _type, _amount , _dateTime);
-                            database.changeTotal(_amount , _type);
                             Navigator.pop(context);
                           }
                         },
