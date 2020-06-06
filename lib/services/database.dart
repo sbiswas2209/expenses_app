@@ -73,10 +73,27 @@ class DatabaseService {
     });
   }
 
-  calculateTotal(){
-    double total;
-    Firestore.instance.collection('users/${this.uid}/notes').getDocuments().then((snapshot) => snapshot.documents.forEach((element) => total += element.data['amount']));
-    print(total);
+  Future<double> calculateTotal() async {
+    double total = 0.0;
+    List data =[0.0];
+    await Firestore.instance.collection('users/${this.uid}/notes').getDocuments().then((snapshot) => snapshot.documents.forEach((element) => data.add(element.data['amount'])));
+    int i=0;
+    for(i=0;i<data.length;i++){
+      total += data[i];
+    }
+    return total;
+  }
+
+  Future<double> calculateCategoryTotal(String type) async {
+    double total = 0.0;
+    List data =[0.0];
+    await Firestore.instance.collection('users/${this.uid}/notes')
+    .where('type' , isEqualTo:type)
+    .getDocuments().then((snapshot) => snapshot.documents.forEach((element) => data.add(element.data['amount'])));
+    int i=0;
+    for(i=0;i<data.length;i++){
+      total += data[i];
+    }
     return total;
   }
 
