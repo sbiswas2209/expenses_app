@@ -67,6 +67,10 @@ class DatabaseService {
       return total;
   }
 
+  Future deleteNote(DocumentSnapshot data) async {
+    await Firestore.instance.collection('users/${this.uid}/notes').document(data.documentID).delete().then((value) => print('Deleted ${this.uid}'));
+  }
+
   Future<double> filterCategoryMonths(DateTime start , DateTime end , String type) async {
     double total = 0.0;
     List data = [0.0];
