@@ -18,6 +18,44 @@ class _HomePageState extends State<HomePage> {
   final User user;
   _HomePageState({this.user});
 
+Future<void> _deleteItemDialog(BuildContext context , DocumentSnapshot data) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: true, // user must tap button!
+    builder: (BuildContext context) {
+      return AlertDialog(
+          title: Text('Delete item',
+            style: TextStyle(
+      fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+      children: <Widget>[
+        Text('Are you sure you want to delete the item?'),
+        Text('This is not recoverable.'),
+      ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+      child: Text('Delete'),
+      onPressed: () {
+        new DatabaseService(uid: user.uid).deleteNote(data);
+        Navigator.of(context).pop();
+      },
+            ),
+            FlatButton(
+      child: Text('No'),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+            ),
+          ],
+        );
+    },
+  );
+}
   
   @override
   Widget build(BuildContext context) {
@@ -50,6 +88,7 @@ class _HomePageState extends State<HomePage> {
                 onTap: () => Navigator.push(context, new MaterialPageRoute(
                   builder: (BuildContext context) => new FullPage(data: snapshot.data.documents[index] , user: user),
                 )),
+                onLongPress: () => _deleteItemDialog(context, snapshot.data.documents[index]),
               );
             },
           );
