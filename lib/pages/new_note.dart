@@ -62,7 +62,7 @@ Future<void> _showNullFieldDialog(BuildContext context) async {
         actions: <Widget>[
           FlatButton.icon(onPressed: () {
             Navigator.push(context, new MaterialPageRoute(
-              builder: (BuildContext context) => new PickImage()
+              builder: (BuildContext context) => new PickImage(uid: this.uid,)
             ));
           }, 
           icon: Icon(Icons.camera_alt), 
@@ -218,7 +218,7 @@ Future<void> _showNullFieldDialog(BuildContext context) async {
                         label: Text('Add'),
                         icon: Icon(Icons.add),
                         onPressed: (){
-                          if(_title == null || _content == null || _type == null || _amount == -9999.9999){
+                          if(_title == null || _content == null || _type == null || _amount == null){
                             _showNullFieldDialog(context);
                           }
                           else{

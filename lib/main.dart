@@ -4,6 +4,7 @@ import 'package:expenses_calculator/authentication/login_page.dart';
 import 'package:expenses_calculator/authentication/sign_up_page.dart';
 import 'package:expenses_calculator/authentication/start_screen.dart';
 import 'package:expenses_calculator/pages/new_note.dart';
+import 'package:expenses_calculator/pages/noteFromImage.dart';
 import 'package:expenses_calculator/pages/pickImage.dart';
 import 'package:expenses_calculator/services/auth.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ final routes = <String , WidgetBuilder>{
   StartScreen.tag : (context) => StartScreen(),
   NewItemPage.tag : (context) => NewItemPage(),
   PickImage.tag : (context) => PickImage(),
+  NoteFromImage.tag : (context) => NoteFromImage(),
 };
 
   @override
